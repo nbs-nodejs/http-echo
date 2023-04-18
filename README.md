@@ -18,7 +18,7 @@ Replace existing request Host with http-echo server host (e.g. http://localhost:
 - DELETE
 - OPTIONS
 
-- Request
+### Request
 
 ```http request
 POST /access-token HTTP/1.1
@@ -28,12 +28,12 @@ Content-Type: application/json
 Content-Length: 77
 
 {
-"clientId": "ABCXYZ123",
-"secret": "<highly-confidential-secret>"
+  "clientId": "ABCXYZ123",
+  "secret": "<highly-confidential-secret>"
 }
 ```
 
-- Response
+### Response
 
 ```json
 {
