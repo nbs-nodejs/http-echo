@@ -1,16 +1,27 @@
 const express = require("express"),
-    config= require("./config");
+    cors = require("cors"),
+    config = require("./config");
 
 function main() {
     // Init server
     const app = express();
     // Init middlewares
-    app.use(express.raw({ verify: rawBodySaver, type: '*/*' }));
+    app.use(express.raw({verify: rawBodySaver, type: '*/*'}));
+    // Set-up cors
+    if (config.CORS_ORIGIN) {
+        const corsMiddleware = cors({
+            origin: config.CORS_ORIGIN,
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        })
+        app.use(corsMiddleware)
+        app.options('*', corsMiddleware)
+        console.log(`  > http-echo: CORS Enabled. Origin=${config.CORS_ORIGIN}`)
+    }
 
     const composeHeaders = (rawHeader) => {
         const header = {};
-        for (let i = 0; i < rawHeader.length; i+=2) {
-            header[rawHeader[i]] = rawHeader[i+1];
+        for (let i = 0; i < rawHeader.length; i += 2) {
+            header[rawHeader[i]] = rawHeader[i + 1];
         }
         return header;
     }
@@ -73,7 +84,7 @@ function main() {
  * @param {Buffer} buf
  * @param {"utf8"} encoding
  */
-const rawBodySaver = (req, res, buf, encoding)  => {
+const rawBodySaver = (req, res, buf, encoding) => {
     if (buf && buf.length) {
         req.rawBody = buf.toString(encoding || 'utf8');
     }
